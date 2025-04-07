@@ -2,7 +2,7 @@ package com.example.icecream.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.icecream.domain.model.Status
+import com.example.icecream.common.model.Status
 
 @Entity(tableName = "ice_creams")
 data class IceCreamEntity(
