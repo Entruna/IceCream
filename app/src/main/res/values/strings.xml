@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">IceCream</string>
+
+    <string name="vanilla">Vanília</string>
+    <string name="caramel">Karamell</string>
+    <string name="tutti_frutti">Tutti-frutti</string>
+    <string name="chocolate">Csokoládé</string>
+    <string name="rum_nut">Rumosdió</string>
+    <string name="coffee">Kávé</string>
+    <string name="pistachio">Pisztácia</string>
+
+    <string name="cone_category">Tölcsérek</string>
+    <string name="other_category">Egyéb</string>
+    <string name="topping_category">Öntetek</string>
+
+    <string name="normal_cone">Normál tölcsér</string>
+    <string name="sweet_cone">Édes tölcsér</string>
+    <string name="chocolate_cone">Csokis tölcsér</string>
+    <string name="cup">Kehely</string>
+    <string name="sugar_magic">Cukorvarázs</string>
+    <string name="roletti">Roletti</string>
+    <string name="waffle">Ostya</string>
+    <string name="strawberry_syrup">Eper öntet</string>
+    <string name="vanilla_syrup">Vanília öntet</string>
 </resources>

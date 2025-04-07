@@ -7,5 +7,5 @@ import androidx.room.PrimaryKey
 data class ExtraCategoryEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val type: String,
-    val required: Boolean
+    val required: Boolean? = null
 )

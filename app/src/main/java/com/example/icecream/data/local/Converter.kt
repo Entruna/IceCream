@@ -1,7 +1,7 @@
 package com.example.icecream.data.local
 
 import androidx.room.TypeConverter
-import com.example.icecream.domain.model.Status
+import com.example.icecream.common.model.Status
 
 class Converter {
     @TypeConverter

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">IceCream</string>
+    <string name="vanilla">Vanilla</string>
+    <string name="caramel">Caramel</string>
+    <string name="tutti_frutti">Tutti-frutti</string>
+    <string name="chocolate">Chocolate</string>
+    <string name="rum_nut">Rum Nut</string>
+    <string name="coffee">Coffee</string>
+    <string name="pistachio">Pistachio</string>
+    <string name="cone_category">Cones</string>
+    <string name="other_category">Other</string>
+    <string name="topping_category">Toppings</string>
+    <string name="normal_cone">Normal Cone</string>
+    <string name="sweet_cone">Sweet Cone</string>
+    <string name="chocolate_cone">Chocolate Cone</string>
+    <string name="cup">Cup</string>
+    <string name="sugar_magic">Sugar Magic</string>
+    <string name="roletti">Roletti</string>
+    <string name="waffle">Waffle</string>
+    <string name="strawberry_syrup">Strawberry Syrup</string>
+    <string name="vanilla_syrup">Vanilla Syrup</string>
+</resources>

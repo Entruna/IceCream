@@ -31,8 +31,8 @@ interface CartDao {
     suspend fun getAllCartItems(): List<CartItemEntity>
 
     @Transaction
-    @Query("SELECT * FROM cart_items WHERE id = :cartItemId")
-    suspend fun getCartItemWithExtras(cartItemId: Long): CartItemWithExtras
+    @Query("SELECT * FROM cart_items")
+    suspend fun getAllCartItemsWithExtras(): List<CartItemWithExtras>
 
     @Transaction
     @Query("DELETE FROM CartExtraCrossRef WHERE cartItemId = :cartItemId AND extraId = :extraId")
