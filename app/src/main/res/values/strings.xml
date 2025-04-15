@@ -22,4 +22,20 @@
     <string name="waffle">Ostya</string>
     <string name="strawberry_syrup">Eper öntet</string>
     <string name="vanilla_syrup">Vanília öntet</string>
+    <string name="ice_cream_status_available">%1$s €</string>
+    <string name="ice_cream_status_unavailable">Nem is volt</string>
+    <string name="ice_cream_status_melted">Elolvadt</string>
+    <string name="button_add_to_cart">Kosárba</string>
+    <string name="cancel">Mégsem</string>
+    <string name="add_extras">Válassz extrákat!</string>
+    <string name="required">kötelező</string>
+    <string name="cart_title">Kosár</string>
+    <string name="button_edit">Szerkesztés</string>
+    <string name="order_success">Sikeres rendelés</string>
+    <string name="order_error">Hiba történt a rendelés során</string>
+    <string name="button_order">Megrendelés</string>
+    <string name="ice_cream_status_available_text">Elérhető</string>
+    <string name="sort">Rendezés</string>
+    <string name="total_price">Összesen:</string>
+    <string name="button_update">Frissítés</string>
 </resources>

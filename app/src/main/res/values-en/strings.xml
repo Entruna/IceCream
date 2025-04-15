@@ -20,4 +20,20 @@
     <string name="waffle">Waffle</string>
     <string name="strawberry_syrup">Strawberry Syrup</string>
     <string name="vanilla_syrup">Vanilla Syrup</string>
+    <string name="ice_cream_status_available">%1$s €</string>
+    <string name="ice_cream_status_unavailable">Unavailable</string>
+    <string name="ice_cream_status_melted">Melted</string>
+    <string name="button_add_to_cart">Add to cart</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_extras">Choose extras!</string>
+    <string name="required">required</string>
+    <string name="cart_title">Cart</string>
+    <string name="button_edit">Edit</string>
+    <string name="order_success">Successful order</string>
+    <string name="order_error">An error occurred during the order</string>
+    <string name="button_order">Order</string>
+    <string name="ice_cream_status_available_text">Available</string>
+    <string name="sort">Sort</string>
+    <string name="total_price">Total:</string>
+    <string name="button_update">Update</string>
 </resources>

@@ -1,18 +1,21 @@
+package com.example.icecream.di
+
 import android.content.Context
 import androidx.room.Room
 import com.example.icecream.data.local.AppDatabase
-import com.example.icecream.data.local.RoomCallback
 import com.example.icecream.data.local.dao.BasePriceDao
 import com.example.icecream.data.local.dao.CartDao
 import com.example.icecream.data.local.dao.ExtraDao
 import com.example.icecream.data.local.dao.IceCreamDao
+import com.example.icecream.data.mapper.ExtraMapper
+import com.example.icecream.data.mapper.IceCreamMapper
 import com.example.icecream.data.remote.IceCreamApi
 import com.example.icecream.data.repository.CartRepositoryImpl
 import com.example.icecream.data.repository.ExtraRepositoryImpl
-import com.example.icecream.domain.repository.IceCreamRepository
 import com.example.icecream.data.repository.IceCreamRepositoryImpl
 import com.example.icecream.domain.repository.CartRepository
 import com.example.icecream.domain.repository.ExtraRepository
+import com.example.icecream.domain.repository.IceCreamRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -67,19 +70,13 @@ object AppModule {
     }
 
     @Provides
-    fun provideRoomCallback(
-        database: AppDatabase
-    ): RoomCallback = RoomCallback(database)
-
-    @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context, callback: RoomCallback): AppDatabase {
+    fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
             context,
             AppDatabase::class.java,
             "icecream_db"
-        ).addCallback(callback)
-            .fallbackToDestructiveMigration()
+        ).fallbackToDestructiveMigration()
             .build()
     }
 
@@ -99,19 +96,21 @@ object AppModule {
     @Singleton
     fun provideIceCreamRepository(
         iceCreamDao: IceCreamDao,
-
-        iceCreamApi: IceCreamApi
+        basePriceDao: BasePriceDao,
+        iceCreamApi: IceCreamApi,
+        iceCreamMapper: IceCreamMapper
     ): IceCreamRepository {
-        return IceCreamRepositoryImpl(iceCreamDao, iceCreamApi)
+        return IceCreamRepositoryImpl(iceCreamDao, basePriceDao, iceCreamApi, iceCreamMapper)
     }
 
     @Provides
     @Singleton
     fun provideExtraRepository(
         extraDao: ExtraDao,
-        iceCreamApi: IceCreamApi
+        iceCreamApi: IceCreamApi,
+        extraMapper: ExtraMapper
     ): ExtraRepository {
-        return ExtraRepositoryImpl(extraDao, iceCreamApi)
+        return ExtraRepositoryImpl(extraDao, iceCreamApi, extraMapper)
     }
 
     @Provides

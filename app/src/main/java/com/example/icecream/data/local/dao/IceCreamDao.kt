@@ -9,16 +9,10 @@ import com.example.icecream.common.model.Status
 
 @Dao
 interface IceCreamDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertIceCreams(iceCreams: List<IceCreamEntity>)
-
-    @Query("SELECT * FROM ice_creams WHERE id = :id")
-    suspend fun getIceCreamById(id: Long): IceCreamEntity?
 
     @Query("SELECT * FROM ice_creams")
     suspend fun getAllIceCreams(): List<IceCreamEntity>
-
-    @Query("SELECT * FROM ice_creams WHERE status = :status")
-    suspend fun getIceCreamsByStatus(status: Status): List<IceCreamEntity>
 
 }

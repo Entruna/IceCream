@@ -1,5 +1,6 @@
 package com.example.icecream.data.local.entity
 
+import androidx.annotation.StringRes
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.icecream.common.model.Status
@@ -10,4 +11,5 @@ data class IceCreamEntity(
     val name: String,
     val status: Status,
     val imageUrl: String?,
-)
+    @StringRes val nameResId: Int? = null,
+    )

@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.example.icecream.data.local.entity.CartExtraCrossRef
 import com.example.icecream.data.local.entity.CartItemEntity
 import com.example.icecream.data.local.entity.CartItemWithExtras
@@ -15,17 +16,32 @@ interface CartDao {
 
     @Transaction
     suspend fun addIceCreamToCartWithExtras(cartItem: CartItemEntity, extraIds: List<Long>) {
-        insertCartItem(cartItem)
+        val cartItemId = insertCartItem(cartItem)
         extraIds.forEach { extraId ->
-            insertCartExtra(CartExtraCrossRef(cartItem.id, extraId))
+            insertCartExtra(CartExtraCrossRef(cartItemId, extraId))
         }
     }
 
     @Insert
-    suspend fun insertCartItem(cartItem: CartItemEntity)
+    suspend fun insertCartItem(cartItem: CartItemEntity) : Long
 
     @Insert
     suspend fun insertCartExtra(cartExtra: CartExtraCrossRef)
+
+
+    @Update
+    suspend fun updateCartItem(cartItem: CartItemEntity)
+
+    @Transaction
+    suspend fun updateCartItemExtras(cartItem: CartItemEntity, extraIds: List<Long>) {
+        deleteExtrasByCartItemId(cartItem.id)
+
+        updateCartItem(cartItem)
+
+        extraIds.forEach { extraId ->
+            insertCartExtra(CartExtraCrossRef(cartItem.id, extraId))
+        }
+    }
 
     @Query("SELECT * FROM cart_items")
     suspend fun getAllCartItems(): List<CartItemEntity>
@@ -40,4 +56,10 @@ interface CartDao {
 
     @Delete
     suspend fun deleteCartItem(cartItem: CartItemEntity)
+
+    @Query("DELETE FROM CartExtraCrossRef WHERE cartItemId = :cartItemId")
+    suspend fun deleteExtrasByCartItemId(cartItemId: Long)
+
+    @Query("DELETE FROM cart_items")
+    suspend fun deleteAllCartItems()
 }

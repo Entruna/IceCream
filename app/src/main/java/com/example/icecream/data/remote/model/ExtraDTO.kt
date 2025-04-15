@@ -7,7 +7,7 @@ data class ExtraDTO(
 )
 
 
-data class ExtraTypeDTO(
+data class ExtraCategoryDTO(
     val type: String,
     val required: Boolean,
     val items: List<ExtraDTO>

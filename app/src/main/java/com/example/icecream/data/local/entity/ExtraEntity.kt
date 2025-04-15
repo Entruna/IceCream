@@ -1,5 +1,6 @@
 package com.example.icecream.data.local.entity
 
+import androidx.annotation.StringRes
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
@@ -19,5 +20,7 @@ data class ExtraEntity(
     @PrimaryKey val id: Long,
     val name: String,
     val price: Double,
-    val categoryId: Long
-)
+    val categoryId: Long,
+    @StringRes val nameResId: Int? = null,
+
+    )

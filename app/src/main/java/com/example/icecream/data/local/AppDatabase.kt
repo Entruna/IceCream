@@ -14,7 +14,7 @@ import com.example.icecream.data.local.entity.ExtraCategoryEntity
 import com.example.icecream.data.local.entity.ExtraEntity
 import com.example.icecream.data.local.entity.IceCreamEntity
 
-@Database(entities = [IceCreamEntity::class, BasePriceEntity::class, CartItemEntity::class, ExtraEntity::class, CartExtraCrossRef::class, ExtraCategoryEntity::class], version = 1)
+@Database(entities = [IceCreamEntity::class, BasePriceEntity::class, CartItemEntity::class, ExtraEntity::class, CartExtraCrossRef::class, ExtraCategoryEntity::class], version = 1, exportSchema = false)
 @TypeConverters(Converter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun iceCreamDao(): IceCreamDao

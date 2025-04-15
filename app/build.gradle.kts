@@ -49,6 +49,12 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
+    implementation (libs.androidx.material.icons.extended)
+    implementation(libs.coil.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation (libs.material3)
+
+
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
@@ -61,14 +67,16 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation ("com.google.dagger:hilt-android:2.51.1")
-    kapt ("com.google.dagger:hilt-compiler:2.51.1")
+    implementation (libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+    kapt (libs.hilt.compiler)
 
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    kapt ("com.squareup.retrofit2:retrofit:2.9.0")
 
-    implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    kapt (libs.retrofit)
+
+    implementation (libs.logging.interceptor)
 
 
 

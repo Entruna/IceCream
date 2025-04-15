@@ -13,25 +13,21 @@ import com.example.icecream.data.local.entity.ExtraEntity
 @Dao
 interface ExtraDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertExtras(extras: List<ExtraEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCategories(categories: List<ExtraCategoryEntity>)
-
-    @Transaction
-    suspend fun insertExtrasAndCategories(categories: List<ExtraCategoryEntity>, extras: List<ExtraEntity>) {
-        insertCategories(categories)
-        insertExtras(extras)
-    }
-
-    @Query("SELECT * FROM extras WHERE id = :id")
-    suspend fun getExtraById(id: Long): ExtraEntity?
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertCategories(categories: List<ExtraCategoryEntity>): List<Long>
 
     @Transaction
     @Query("SELECT * FROM extra_categories")
     suspend fun getCategoriesWithExtras(): List<ExtraCategoryWithExtras>
 
-    @Delete
-    suspend fun deleteExtra(extra: ExtraEntity)
+    @Query("SELECT * FROM extra_categories")
+    suspend fun getAllCategories(): List<ExtraCategoryEntity>
+
+    @Transaction
+    @Query("SELECT * FROM extra_categories WHERE id IN (SELECT categoryId FROM extras WHERE id IN (:extraIds))")
+    suspend fun getCategoriesWithExtrasByExtraIds(extraIds: List<Long>): List<ExtraCategoryWithExtras>
+
 }
