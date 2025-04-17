@@ -24,13 +24,10 @@ class CartMapper @Inject constructor(
             iceCreamPrice
         )
         val extrasUIModels = cartItemWithExtras.extras.map { extra ->
-            val categoryWithExtras = categoriesWithExtras.find { categoryWithExtras ->
-                categoryWithExtras.extras.any { it.categoryId == extra.categoryId }
-            }
+            val categoryWithExtras = categoriesWithExtras.find {
 
-            if (categoryWithExtras == null) {
-                throw IllegalArgumentException("Extra category not found: ${extra.name}")
-            }
+                it.category.id == extra.categoryId
+            } ?: throw IllegalArgumentException("Category not found for extra: ${extra.name} (id: ${extra.id})")
 
             ExtraUIModel(
                 id = extra.id,

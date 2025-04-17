@@ -15,4 +15,7 @@ interface BasePriceDao {
     @Query("SELECT price FROM base_price WHERE id = 0")
     suspend fun getBasePrice(): Double
 
+    @Query("DELETE FROM base_price")
+    suspend fun deleteBasePrice()
+
 }

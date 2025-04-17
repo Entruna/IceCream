@@ -40,6 +40,6 @@ class CartRepositoryImpl @Inject constructor(
     }
 
     override suspend fun clearCart() {
-        cartDao.deleteAllCartItems()
+        cartDao.deleteCartItems()
     }
 }

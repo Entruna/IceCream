@@ -15,4 +15,6 @@ interface IceCreamDao {
     @Query("SELECT * FROM ice_creams")
     suspend fun getAllIceCreams(): List<IceCreamEntity>
 
+    @Query("DELETE FROM ice_creams")
+    suspend fun deleteIceCreams()
 }

@@ -61,5 +61,5 @@ interface CartDao {
     suspend fun deleteExtrasByCartItemId(cartItemId: Long)
 
     @Query("DELETE FROM cart_items")
-    suspend fun deleteAllCartItems()
+    suspend fun deleteCartItems()
 }

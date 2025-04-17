@@ -26,8 +26,14 @@ interface ExtraDao {
     @Query("SELECT * FROM extra_categories")
     suspend fun getAllCategories(): List<ExtraCategoryEntity>
 
+    @Query("SELECT * FROM extras")
+    suspend fun getAllExtras(): List<ExtraEntity>
+
     @Transaction
     @Query("SELECT * FROM extra_categories WHERE id IN (SELECT categoryId FROM extras WHERE id IN (:extraIds))")
     suspend fun getCategoriesWithExtrasByExtraIds(extraIds: List<Long>): List<ExtraCategoryWithExtras>
+
+    @Query("DELETE FROM extra_categories")
+    suspend fun deleteAll()
 
 }

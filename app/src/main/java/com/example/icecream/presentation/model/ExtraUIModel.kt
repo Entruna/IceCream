@@ -5,5 +5,5 @@ data class ExtraUIModel(
     val name: String,
     val price: Double,
     val category: ExtraCategoryUIModel,
-    val nameResId: Int?,
+    val nameResId: Int?
 )
