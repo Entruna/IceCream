@@ -73,10 +73,10 @@ object AppModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            "icecream_db"
-        ).fallbackToDestructiveMigration()
+                context,
+                AppDatabase::class.java,
+                "icecream_db"
+            ).fallbackToDestructiveMigration(false)
             .build()
     }
 

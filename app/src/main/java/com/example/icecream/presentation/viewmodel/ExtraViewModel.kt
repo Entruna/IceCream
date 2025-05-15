@@ -1,16 +1,15 @@
 package com.example.icecream.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.icecream.data.mapper.ExtraMapper
 import com.example.icecream.domain.repository.ExtraRepository
 import com.example.icecream.presentation.model.ExtraCategoryWithExtrasUIModel
 import com.example.icecream.presentation.model.ExtraUIModel
+import com.example.icecream.presentation.viewmodel.extension.launchIO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -33,7 +32,7 @@ class ExtraViewModel @Inject constructor(
     }
 
     private fun loadExtras() {
-        viewModelScope.launch {
+        launchIO {
             val categories = extraRepository.getCategoriesWithExtrasFromDb()
             _categoriesWithExtras.value =
                 extraMapper.mapToExtraCategoryWithExtrasUIModelList(categories)

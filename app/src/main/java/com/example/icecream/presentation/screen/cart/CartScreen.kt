@@ -37,6 +37,7 @@ import com.example.icecream.common.model.OrderStatus
 import com.example.icecream.presentation.component.TopBar
 import com.example.icecream.presentation.model.CartItemUIModel
 import com.example.icecream.presentation.model.CartItemWithExtrasUIModel
+import com.example.icecream.presentation.model.calculatePrice
 import com.example.icecream.presentation.screen.ExtrasDialog
 import com.example.icecream.presentation.viewmodel.CartViewModel
 import com.example.icecream.presentation.viewmodel.ExtraViewModel
@@ -157,7 +158,7 @@ fun CartScreen(
                         cartViewModel.removeExtra(cartItem.id, extraId)
                     },
                     onEditExtras = { selectedCartItem = cartItemWithExtras },
-                    calculateItemPrice = { cartViewModel.calculateItemPrice(it) }
+                    calculateItemPrice = { it.calculatePrice() }
                 )
                 if (index != cartItemsWithExtras.lastIndex) {
                     HorizontalDivider(

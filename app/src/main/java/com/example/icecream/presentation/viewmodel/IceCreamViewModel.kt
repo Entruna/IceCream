@@ -1,16 +1,15 @@
 package com.example.icecream.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.icecream.common.model.Status
 import com.example.icecream.data.mapper.IceCreamMapper
 import com.example.icecream.domain.repository.IceCreamRepository
 import com.example.icecream.presentation.model.IceCreamUIModel
+import com.example.icecream.presentation.viewmodel.extension.launchIO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +23,7 @@ class IceCreamViewModel @Inject constructor(
     val sortedIceCreams: StateFlow<List<IceCreamUIModel>> = _sortedIceCreams.asStateFlow()
 
     private val _isLoading = MutableStateFlow(true)
-    val isLoading: StateFlow<Boolean> = _isLoading
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     init {
         loadIceCreams()
@@ -32,7 +31,7 @@ class IceCreamViewModel @Inject constructor(
     }
 
     private fun loadIceCreams() {
-        viewModelScope.launch {
+        launchIO {
             val iceCreamEntities = iceCreamRepository.getIceCreamsFromDb()
 
             val iceCreamPrice = iceCreamRepository.getBasePrice()

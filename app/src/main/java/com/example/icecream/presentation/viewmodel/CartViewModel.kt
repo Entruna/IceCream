@@ -12,6 +12,8 @@ import com.example.icecream.presentation.model.CartItemUIModel
 import com.example.icecream.presentation.model.CartItemWithExtrasUIModel
 import com.example.icecream.presentation.model.ExtraUIModel
 import com.example.icecream.presentation.model.IceCreamUIModel
+import com.example.icecream.presentation.model.calculatePrice
+import com.example.icecream.presentation.viewmodel.extension.launchIO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,7 +21,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -37,17 +38,11 @@ class CartViewModel @Inject constructor(
     private val _orderStatus = MutableStateFlow<OrderStatus?>(null)
     val orderStatus: StateFlow<OrderStatus?> = _orderStatus.asStateFlow()
 
-    fun calculateItemPrice(cartItemWithExtras: CartItemWithExtrasUIModel): Double {
-        val iceCreamPrice = cartItemWithExtras.cartItem.iceCream.price
-        val totalExtrasPrice = cartItemWithExtras.extras.sumOf { it.price }
-        return iceCreamPrice + totalExtrasPrice
-    }
-
-    val totalPrice: StateFlow<Any> = _cartItems.map { cartItems ->
-        cartItems.sumOf { cartItemWithExtras ->
-            calculateItemPrice(cartItemWithExtras)
+    val totalPrice: StateFlow<Double> = _cartItems
+        .map { cartItems ->
+            cartItems.sumOf { it.calculatedPrice }
         }
-    }.stateIn(viewModelScope, SharingStarted.Lazily, 0f)
+        .stateIn(viewModelScope, SharingStarted.Lazily, 0.0)
 
     init {
         loadCartItems()
@@ -59,18 +54,22 @@ class CartViewModel @Inject constructor(
         val categories = extraRepository.getCategoriesWithExtrasByExtraIds(extraIds)
         val basePrice = iceCreamRepository.getBasePrice()
 
-        return cartMapper.mapToUIModelList(cartItems, basePrice, categories)
+        val mappedItems =  cartMapper.mapToUIModelList(cartItems, basePrice, categories)
+
+        return mappedItems.map { item ->
+            item.copy(calculatedPrice = item.calculatePrice())
+        }
     }
 
     fun loadCartItems() {
-        viewModelScope.launch {
+        launchIO {
             val items = getMappedCartItems()
             _cartItems.value = items
         }
     }
 
     fun addToCart(iceCream: IceCreamUIModel, selectedExtras: List<ExtraUIModel>) {
-        viewModelScope.launch {
+        launchIO {
             val cartItem = CartItemUIModel.New(
                 iceCream = iceCream,
             )
@@ -83,7 +82,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun removeIceCream(cartItem: CartItemUIModel) {
-        viewModelScope.launch {
+        launchIO {
             val cartItemEntity = cartMapper.mapToEntity(cartItem)
             cartRepository.removeIceCream(cartItemEntity)
             loadCartItems()
@@ -91,14 +90,14 @@ class CartViewModel @Inject constructor(
     }
 
     fun removeExtra(cartItemId: Long, extraId: Long) {
-        viewModelScope.launch {
+        launchIO {
             cartRepository.removeExtra(cartItemId, extraId)
             loadCartItems()
         }
     }
 
     fun updateCartItemExtras(cartItemWithExtras: CartItemWithExtrasUIModel) {
-        viewModelScope.launch {
+        launchIO {
             val extraIds = cartItemWithExtras.extras.map { it.id }
 
             val cartItemEntity = cartMapper.mapToEntity(cartItemWithExtras.cartItem)
@@ -109,7 +108,7 @@ class CartViewModel @Inject constructor(
     }
 
     fun submitOrder() {
-        viewModelScope.launch {
+        launchIO {
             val uiModels = getMappedCartItems()
 
             val orderRequest = uiModels.map {
