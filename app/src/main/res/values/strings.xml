@@ -38,4 +38,8 @@
     <string name="sort">Rendezés</string>
     <string name="total_price">Összesen:</string>
     <string name="button_update">Frissítés</string>
+    <string name="error_fetch_data">Nem sikerült betölteni az adatokat</string>
+    <string name="retry">Újra</string>
+
+
 </resources>

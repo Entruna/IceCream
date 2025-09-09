@@ -6,6 +6,7 @@ import com.example.icecream.data.local.dao.IceCreamDao
 import com.example.icecream.data.local.entity.IceCreamEntity
 import com.example.icecream.data.mapper.IceCreamMapper
 import com.example.icecream.data.remote.IceCreamApi
+import com.example.icecream.domain.exception.DataFetchException
 import com.example.icecream.domain.repository.IceCreamRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -37,7 +38,7 @@ class IceCreamRepositoryImpl @Inject constructor(
             basePriceDao.insertBasePrice(basePrice)
 
         } catch (e: Exception) {
-            Log.e("IceCreamRepository", "Error fetching ice creams", e)
+            throw DataFetchException("Failed to fetch ice creams", e)
         }
     }
 

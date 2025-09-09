@@ -36,4 +36,8 @@
     <string name="sort">Sort</string>
     <string name="total_price">Total:</string>
     <string name="button_update">Update</string>
+    <string name="error_fetch_data">Failed to load data</string>
+    <string name="retry">Retry</string>
+
+
 </resources>

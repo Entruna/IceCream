@@ -5,6 +5,7 @@ import com.example.icecream.data.local.dao.ExtraDao
 import com.example.icecream.data.local.entity.ExtraCategoryWithExtras
 import com.example.icecream.data.mapper.ExtraMapper
 import com.example.icecream.data.remote.IceCreamApi
+import com.example.icecream.domain.exception.DataFetchException
 import com.example.icecream.domain.repository.ExtraRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -48,7 +49,7 @@ class ExtraRepositoryImpl @Inject constructor(
 
 
         } catch (e: Exception) {
-            Log.e("ExtraRepository", "Error fetching extras", e)
+            throw DataFetchException("Failed to fetch extras", e)
         }
     }
 

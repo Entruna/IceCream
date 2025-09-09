@@ -8,8 +8,13 @@ class InitAppDataUseCase @Inject constructor(
     private val iceCreamRepository: IceCreamRepository,
     private val extraRepository: ExtraRepository
 ) {
-    suspend operator fun invoke() {
-        iceCreamRepository.fetchAndStoreIceCreams()
-        extraRepository.fetchAndStoreExtras()
+    suspend operator fun invoke(): Result<Unit> {
+        return try {
+            iceCreamRepository.fetchAndStoreIceCreams()
+            extraRepository.fetchAndStoreExtras()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }
