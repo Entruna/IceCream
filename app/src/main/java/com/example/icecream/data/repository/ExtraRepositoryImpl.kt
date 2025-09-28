@@ -1,17 +1,13 @@
 package com.example.icecream.data.repository
 
-import android.util.Log
 import com.example.icecream.data.local.dao.ExtraDao
 import com.example.icecream.data.local.entity.ExtraCategoryWithExtras
 import com.example.icecream.data.mapper.ExtraMapper
 import com.example.icecream.data.remote.IceCreamApi
 import com.example.icecream.domain.exception.DataFetchException
 import com.example.icecream.domain.repository.ExtraRepository
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class ExtraRepositoryImpl @Inject constructor(
+class ExtraRepositoryImpl(
     private val extraDao: ExtraDao,
     private val iceCreamApi: IceCreamApi,
     private val extraMapper: ExtraMapper

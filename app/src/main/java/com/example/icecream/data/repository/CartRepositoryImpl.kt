@@ -7,11 +7,8 @@ import com.example.icecream.data.remote.IceCreamApi
 import com.example.icecream.data.remote.model.IceCreamOrderRequest
 import com.example.icecream.domain.repository.CartRepository
 import retrofit2.Response
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class CartRepositoryImpl @Inject constructor(
+class CartRepositoryImpl(
     private val cartDao: CartDao,
     private val iceCreamApi: IceCreamApi
 ) : CartRepository {
@@ -23,7 +20,10 @@ class CartRepositoryImpl @Inject constructor(
         return cartDao.getAllCartItemsWithExtras()
     }
 
-    override suspend fun updateCartItemExtras(cartItem: CartItemEntity, selectedExtras: List<Long>) {
+    override suspend fun updateCartItemExtras(
+        cartItem: CartItemEntity,
+        selectedExtras: List<Long>
+    ) {
         cartDao.updateCartItemExtras(cartItem, selectedExtras)
     }
 

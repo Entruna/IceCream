@@ -42,18 +42,15 @@ object TestModule {
 
     @Provides
     fun provideIceCreamDao(db: AppDatabase) = db.iceCreamDao()
+
     @Provides
     fun provideBasePriceDao(db: AppDatabase) = db.basePriceDao()
+
     @Provides
     fun provideExtraDao(db: AppDatabase) = db.extraDao()
+
     @Provides
     fun provideCartDao(db: AppDatabase) = db.cartDao()
-
-    @Provides
-    fun provideIceCreamMapper(): IceCreamMapper = IceCreamMapper()
-    @Provides
-    fun provideExtraMapper(): ExtraMapper = ExtraMapper()
-
 
     @Provides
     fun provideCartMapper(
@@ -63,26 +60,28 @@ object TestModule {
 
 
     @Provides
+    @Singleton
     fun provideCartRepository(
         cartDao: CartDao,
         api: IceCreamApi,
-        cartMapper: CartMapper
     ): CartRepository = CartRepositoryImpl(cartDao, api)
 
     @Provides
+    @Singleton
     fun provideIceCreamRepository(
         iceCreamDao: IceCreamDao,
         basePriceDao: BasePriceDao,
         api: IceCreamApi,
         mapper: IceCreamMapper
     ): IceCreamRepository = IceCreamRepositoryImpl(
-        iceCreamDao = iceCreamDao,
-        basePriceDao = basePriceDao,
-        iceCreamApi = api,
-        iceCreamMapper = mapper
+        iceCreamDao,
+        basePriceDao,
+        api,
+        mapper
     )
 
     @Provides
+    @Singleton
     fun provideExtraRepository(
         extraDao: ExtraDao,
         api: IceCreamApi,
