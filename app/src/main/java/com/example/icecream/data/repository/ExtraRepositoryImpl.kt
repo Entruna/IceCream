@@ -6,6 +6,7 @@ import com.example.icecream.data.mapper.ExtraMapper
 import com.example.icecream.data.remote.IceCreamApi
 import com.example.icecream.domain.exception.DataFetchException
 import com.example.icecream.domain.repository.ExtraRepository
+import kotlinx.coroutines.flow.Flow
 
 class ExtraRepositoryImpl(
     private val extraDao: ExtraDao,
@@ -53,7 +54,6 @@ class ExtraRepositoryImpl(
         return extraDao.getCategoriesWithExtrasByExtraIds(extraIds)
     }
 
-    override suspend fun getCategoriesWithExtrasFromDb(): List<ExtraCategoryWithExtras> {
-        return extraDao.getCategoriesWithExtras()
-    }
+    override fun getCategoriesWithExtrasFlow(): Flow<List<ExtraCategoryWithExtras>> =
+        extraDao.getCategoriesWithExtrasFlow()
 }

@@ -6,6 +6,7 @@ import com.example.icecream.data.local.entity.CartItemWithExtras
 import com.example.icecream.data.remote.IceCreamApi
 import com.example.icecream.data.remote.model.IceCreamOrderRequest
 import com.example.icecream.domain.repository.CartRepository
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
 class CartRepositoryImpl(
@@ -16,9 +17,8 @@ class CartRepositoryImpl(
         return cartDao.addIceCreamToCartWithExtras(cartItem, extraIds)
     }
 
-    override suspend fun getAllCartItemsWithExtras(): List<CartItemWithExtras> {
-        return cartDao.getAllCartItemsWithExtras()
-    }
+    override fun getAllCartItemsWithExtrasFlow(): Flow<List<CartItemWithExtras>> =
+        cartDao.getAllCartItemsWithExtrasFlow()
 
     override suspend fun updateCartItemExtras(
         cartItem: CartItemEntity,

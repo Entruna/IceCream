@@ -16,6 +16,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import junit.framework.TestCase.fail
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -73,7 +74,7 @@ class CartRepositoryTest {
 
         repository.addIceCreamWithExtras(cartItem, extras)
 
-        val result = cartDao.getAllCartItemsWithExtras()
+        val result = repository.getAllCartItemsWithExtrasFlow().first()
         assertEquals("Cart should contain one item", 1, result.size)
         assertEquals(extras.toSet(), result.first().extras.map { it.id }.toSet())
     }
@@ -84,7 +85,7 @@ class CartRepositoryTest {
         val cartItem = CartItemEntity(id = 1L, iceCreamId = 1L)
         repository.addIceCreamWithExtras(cartItem, emptyList())
 
-        val result = repository.getAllCartItemsWithExtras()
+        val result = repository.getAllCartItemsWithExtrasFlow().first()
         assertTrue("Expected non-empty cart item list", result.isNotEmpty())
     }
 
@@ -97,7 +98,7 @@ class CartRepositoryTest {
         repository.addIceCreamWithExtras(cartItem, listOf(10L))
         repository.updateCartItemExtras(cartItem, listOf(20L))
 
-        val items = cartDao.getAllCartItemsWithExtras()
+        val items = repository.getAllCartItemsWithExtrasFlow().first()
         assertEquals(
             "Extras should be updated",
             listOf(20L),
@@ -111,7 +112,7 @@ class CartRepositoryTest {
         repository.addIceCreamWithExtras(cartItem, emptyList())
         repository.removeIceCream(cartItem)
 
-        val items = cartDao.getAllCartItemsWithExtras()
+        val items = repository.getAllCartItemsWithExtrasFlow().first()
         assertTrue("Cart item should be removed", items.none { it.cartItem.id == cartItem.id })
     }
 
@@ -122,7 +123,7 @@ class CartRepositoryTest {
         repository.addIceCreamWithExtras(cartItem, emptyList())
         repository.clearCart()
 
-        val items = cartDao.getAllCartItemsWithExtras()
+        val items = repository.getAllCartItemsWithExtrasFlow().first()
         assertEquals("Cart should be empty", 0, items.size)
     }
 

@@ -10,6 +10,7 @@ import androidx.room.Update
 import com.example.icecream.data.local.entity.CartExtraCrossRef
 import com.example.icecream.data.local.entity.CartItemEntity
 import com.example.icecream.data.local.entity.CartItemWithExtras
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CartDao {
@@ -48,7 +49,7 @@ interface CartDao {
 
     @Transaction
     @Query("SELECT * FROM cart_items")
-    suspend fun getAllCartItemsWithExtras(): List<CartItemWithExtras>
+    fun getAllCartItemsWithExtrasFlow(): Flow<List<CartItemWithExtras>>
 
     @Transaction
     @Query("DELETE FROM CartExtraCrossRef WHERE cartItemId = :cartItemId AND extraId = :extraId")

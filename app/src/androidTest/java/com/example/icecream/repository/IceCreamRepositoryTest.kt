@@ -6,6 +6,7 @@ import com.example.icecream.domain.repository.IceCreamRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -38,8 +39,8 @@ class IceCreamRepositoryTest {
     fun testFetchAndStoreIceCreams() = runTest {
         repository.fetchAndStoreIceCreams()
 
-        val iceCreams = iceCreamDao.getAllIceCreams()
-        val price = basePriceDao.getBasePrice()
+        val iceCreams = iceCreamDao.getAllIceCreamsFlow().first()
+        val price = basePriceDao.getBasePriceFlow().first()
 
         assertEquals("Should store 1 ice cream", 1, iceCreams.size)
         assertEquals("Base price should be 2.5", 2.5, price)

@@ -1,15 +1,18 @@
 package com.example.icecream.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.icecream.data.mapper.ExtraMapper
 import com.example.icecream.domain.repository.ExtraRepository
 import com.example.icecream.presentation.model.ExtraCategoryWithExtrasUIModel
 import com.example.icecream.presentation.model.ExtraUIModel
-import com.example.icecream.presentation.viewmodel.extension.launchIO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 
@@ -19,25 +22,19 @@ class ExtraViewModel @Inject constructor(
     private val extraMapper: ExtraMapper
 ) : ViewModel() {
 
-    private val _categoriesWithExtras =
-        MutableStateFlow<List<ExtraCategoryWithExtrasUIModel>>(emptyList())
     val categoriesWithExtras: StateFlow<List<ExtraCategoryWithExtrasUIModel>> =
-        _categoriesWithExtras.asStateFlow()
+        extraRepository.getCategoriesWithExtrasFlow()
+            .map { categories ->
+                extraMapper.mapToExtraCategoryWithExtrasUIModelList(categories)
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Lazily,
+                initialValue = emptyList()
+            )
 
     private val _selectedExtras = MutableStateFlow<List<ExtraUIModel>>(emptyList())
     val selectedExtras: StateFlow<List<ExtraUIModel>> = _selectedExtras.asStateFlow()
-
-    init {
-        loadExtras()
-    }
-
-    private fun loadExtras() {
-        launchIO {
-            val categories = extraRepository.getCategoriesWithExtrasFromDb()
-            _categoriesWithExtras.value =
-                extraMapper.mapToExtraCategoryWithExtrasUIModelList(categories)
-        }
-    }
 
     fun toggleExtraSelection(extra: ExtraUIModel) {
         val currentSelected = _selectedExtras.value.toMutableList()

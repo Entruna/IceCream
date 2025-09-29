@@ -9,6 +9,7 @@ import androidx.room.Transaction
 import com.example.icecream.data.local.entity.ExtraCategoryEntity
 import com.example.icecream.data.local.entity.ExtraCategoryWithExtras
 import com.example.icecream.data.local.entity.ExtraEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ExtraDao {
@@ -21,7 +22,7 @@ interface ExtraDao {
 
     @Transaction
     @Query("SELECT * FROM extra_categories")
-    suspend fun getCategoriesWithExtras(): List<ExtraCategoryWithExtras>
+    fun getCategoriesWithExtrasFlow(): Flow<List<ExtraCategoryWithExtras>>
 
     @Query("SELECT * FROM extra_categories")
     suspend fun getAllCategories(): List<ExtraCategoryEntity>

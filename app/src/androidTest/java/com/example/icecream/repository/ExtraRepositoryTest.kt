@@ -8,6 +8,7 @@ import com.example.icecream.domain.repository.ExtraRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -68,7 +69,7 @@ class ExtraRepositoryTest {
         extraDao.insertCategories(listOf(toppingsCategory))
         extraDao.insertExtras(listOf(chocoChips))
 
-        val result = repository.getCategoriesWithExtrasFromDb()
+        val result = repository.getCategoriesWithExtrasFlow().first()
 
         assertEquals("Should return 1 category", 1, result.size)
         assertEquals("Category should contain 1 extra", 1, result.first().extras.size)

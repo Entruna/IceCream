@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -32,41 +33,27 @@ class CartViewModel @Inject constructor(
     private val extraRepository: ExtraRepository
 ) : ViewModel() {
 
-    private val _cartItems = MutableStateFlow<List<CartItemWithExtrasUIModel>>(emptyList())
-    val cartItems: StateFlow<List<CartItemWithExtrasUIModel>> = _cartItems.asStateFlow()
+    val cartItems: StateFlow<List<CartItemWithExtrasUIModel>> =
+        combine(
+            cartRepository.getAllCartItemsWithExtrasFlow(),
+            iceCreamRepository.getBasePriceFlow()
+        ) { cartItemsList, basePrice ->
+            val extraIds = cartItemsList.flatMap { it.extras }.map { it.id }.distinct()
+            val categories = extraRepository.getCategoriesWithExtrasByExtraIds(extraIds)
+
+            cartMapper.mapToUIModelList(cartItemsList, basePrice, categories)
+                .map { it.copy(calculatedPrice = it.calculatePrice()) }
+        }
+            .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private val _orderStatus = MutableStateFlow<OrderStatus?>(null)
     val orderStatus: StateFlow<OrderStatus?> = _orderStatus.asStateFlow()
 
-    val totalPrice: StateFlow<Double> = _cartItems
+    val totalPrice: StateFlow<Double> = cartItems
         .map { cartItems ->
             cartItems.sumOf { it.calculatedPrice }
         }
         .stateIn(viewModelScope, SharingStarted.Lazily, 0.0)
-
-    init {
-        loadCartItems()
-    }
-
-    private suspend fun getMappedCartItems(): List<CartItemWithExtrasUIModel> {
-        val cartItems = cartRepository.getAllCartItemsWithExtras()
-        val extraIds = cartItems.flatMap { it.extras }.map { it.id }.distinct()
-        val categories = extraRepository.getCategoriesWithExtrasByExtraIds(extraIds)
-        val basePrice = iceCreamRepository.getBasePrice()
-
-        val mappedItems =  cartMapper.mapToUIModelList(cartItems, basePrice, categories)
-
-        return mappedItems.map { item ->
-            item.copy(calculatedPrice = item.calculatePrice())
-        }
-    }
-
-    fun loadCartItems() {
-        launchIO {
-            val items = getMappedCartItems()
-            _cartItems.value = items
-        }
-    }
 
     fun addToCart(iceCream: IceCreamUIModel, selectedExtras: List<ExtraUIModel>) {
         launchIO {
@@ -76,8 +63,6 @@ class CartViewModel @Inject constructor(
             val extraIds = selectedExtras.map { it.id }
             val cartItemEntity = cartMapper.mapToEntity(cartItem)
             cartRepository.addIceCreamWithExtras(cartItemEntity, extraIds)
-
-            loadCartItems()
         }
     }
 
@@ -85,14 +70,12 @@ class CartViewModel @Inject constructor(
         launchIO {
             val cartItemEntity = cartMapper.mapToEntity(cartItem)
             cartRepository.removeIceCream(cartItemEntity)
-            loadCartItems()
         }
     }
 
     fun removeExtra(cartItemId: Long, extraId: Long) {
         launchIO {
             cartRepository.removeExtra(cartItemId, extraId)
-            loadCartItems()
         }
     }
 
@@ -103,13 +86,12 @@ class CartViewModel @Inject constructor(
             val cartItemEntity = cartMapper.mapToEntity(cartItemWithExtras.cartItem)
             cartRepository.updateCartItemExtras(cartItemEntity, extraIds)
 
-            loadCartItems()
         }
     }
 
     fun submitOrder() {
         launchIO {
-            val uiModels = getMappedCartItems()
+            val uiModels = cartItems.value
 
             val orderRequest = uiModels.map {
                 IceCreamOrderRequest(
@@ -122,7 +104,6 @@ class CartViewModel @Inject constructor(
 
             _orderStatus.value = if (response.isSuccessful) {
                 cartRepository.clearCart()
-                loadCartItems()
                 OrderStatus.SUCCESS
             } else {
                 OrderStatus.ERROR

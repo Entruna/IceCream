@@ -1,9 +1,10 @@
 package com.example.icecream.domain.repository
 
 import com.example.icecream.data.local.entity.IceCreamEntity
+import kotlinx.coroutines.flow.Flow
 
 interface IceCreamRepository {
-    suspend fun getIceCreamsFromDb(): List<IceCreamEntity>
+    fun getIceCreamsFromDbFlow(): Flow<List<IceCreamEntity>>
     suspend fun fetchAndStoreIceCreams()
-    suspend fun getBasePrice(): Double
+    fun getBasePriceFlow(): Flow<Double>
 }

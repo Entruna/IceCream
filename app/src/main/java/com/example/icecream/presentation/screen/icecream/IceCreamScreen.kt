@@ -61,9 +61,6 @@ fun IceCreamScreen(
     var showExtrasDialog by remember { mutableStateOf(false) }
     var selectedIceCream by remember { mutableStateOf<IceCreamUIModel?>(null) }
 
-    LaunchedEffect(Unit) {
-        cartViewModel.loadCartItems()
-    }
     LaunchedEffect(sortTrigger) {
         listState.animateScrollToItem(0)
     }

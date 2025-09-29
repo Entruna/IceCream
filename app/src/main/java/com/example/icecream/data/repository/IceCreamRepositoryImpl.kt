@@ -7,6 +7,7 @@ import com.example.icecream.data.mapper.IceCreamMapper
 import com.example.icecream.data.remote.IceCreamApi
 import com.example.icecream.domain.exception.DataFetchException
 import com.example.icecream.domain.repository.IceCreamRepository
+import kotlinx.coroutines.flow.Flow
 
 class IceCreamRepositoryImpl(
     private val iceCreamDao: IceCreamDao,
@@ -15,9 +16,8 @@ class IceCreamRepositoryImpl(
     private val iceCreamMapper: IceCreamMapper
 ) : IceCreamRepository {
 
-    override suspend fun getIceCreamsFromDb(): List<IceCreamEntity> {
-        return iceCreamDao.getAllIceCreams()
-    }
+    override fun getIceCreamsFromDbFlow(): Flow<List<IceCreamEntity>> =
+        iceCreamDao.getAllIceCreamsFlow()
 
     override suspend fun fetchAndStoreIceCreams() {
         try {
@@ -38,8 +38,7 @@ class IceCreamRepositoryImpl(
         }
     }
 
-    override suspend fun getBasePrice(): Double {
-        return basePriceDao.getBasePrice()
-    }
+    override fun getBasePriceFlow(): Flow<Double> =
+        basePriceDao.getBasePriceFlow()
 
 }

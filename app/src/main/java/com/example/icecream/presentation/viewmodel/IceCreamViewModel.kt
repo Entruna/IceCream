@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 
@@ -21,8 +22,10 @@ class IceCreamViewModel @Inject constructor(
     private val initAppDataUseCase: InitAppDataUseCase
 ) : ViewModel() {
 
-    private val _sortedIceCreams = MutableStateFlow<List<IceCreamUIModel>>(emptyList())
+    private val _sortedIceCreams: MutableStateFlow<List<IceCreamUIModel>> =
+        MutableStateFlow(emptyList())
     val sortedIceCreams: StateFlow<List<IceCreamUIModel>> = _sortedIceCreams.asStateFlow()
+
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -33,6 +36,15 @@ class IceCreamViewModel @Inject constructor(
     init {
         initIceCreams()
 
+        launchIO {
+            iceCreamRepository.getIceCreamsFromDbFlow()
+                .combine(iceCreamRepository.getBasePriceFlow()) { iceCreamEntities, basePrice ->
+                    iceCreamMapper.mapToUIModelList(iceCreamEntities, basePrice)
+                }
+                .collect { list ->
+                    _sortedIceCreams.value = list
+                }
+        }
     }
 
     fun initIceCreams() {
@@ -43,8 +55,6 @@ class IceCreamViewModel @Inject constructor(
                 val result = initAppDataUseCase()
                 if (result.isFailure) {
                     _isError.value = true
-                } else {
-                    loadFromDb()
                 }
             } catch (e: Exception) {
                 _isError.value = true
@@ -54,24 +64,14 @@ class IceCreamViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadFromDb() {
-        val iceCreamEntities = iceCreamRepository.getIceCreamsFromDb()
-        val iceCreamPrice = iceCreamRepository.getBasePrice()
-
-        val iceCreamUIModels = iceCreamMapper.mapToUIModelList(iceCreamEntities, iceCreamPrice)
-        _sortedIceCreams.value = iceCreamUIModels
-
-    }
-
     fun sortIceCreamsByStatus(status: Status) {
-        val sortedList = _sortedIceCreams.value.sortedBy { iceCream ->
+        _sortedIceCreams.value = sortedIceCreams.value.sortedBy { iceCream ->
             when (status) {
                 Status.AVAILABLE -> if (iceCream.status == Status.AVAILABLE) 0 else 1
                 Status.UNAVAILABLE -> if (iceCream.status == Status.UNAVAILABLE) 0 else 1
                 Status.MELTED -> if (iceCream.status == Status.MELTED) 0 else 1
             }
         }
-        _sortedIceCreams.value = sortedList
     }
 
 }

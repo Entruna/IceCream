@@ -16,6 +16,9 @@
       <SelectionState runConfigName="Tests in 'com.example.icecream'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="CartRepositoryTest">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>
